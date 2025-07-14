@@ -1,6 +1,6 @@
 import type { Handler, ScheduledEvent } from 'aws-lambda';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
-import puppeteer from 'puppeteer';
+import puppeteer, { type Browser } from 'puppeteer';
 
 const isHeadless = process.env.IS_HEADLESS;
 const vermittlungscode = process.env.VERMITTLUNGS_CODE;
@@ -14,8 +14,9 @@ export const handler: Handler<ScheduledEvent> = async (
   event: ScheduledEvent
 ): Promise<void> => {
   console.log('Starting appointment check');
+  let browser: Browser | undefined;
   try {
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       headless: !!isHeadless,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
@@ -61,6 +62,7 @@ export const handler: Handler<ScheduledEvent> = async (
   } catch (error: any) {
     console.error('Error finding appointment', error);
   } finally {
+    await browser?.close();
     console.log('Fininshed appointment check');
   }
 };
