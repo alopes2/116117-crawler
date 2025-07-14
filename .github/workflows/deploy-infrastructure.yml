@@ -21,6 +21,7 @@ jobs:
       TF_VAR_VERMITTLUNGS_CODE: ${{ secrets.VERMITTLUNGS_CODE }}
       TF_VAR_PLZ: ${{ secrets.PLZ }}
       TF_VAR_LOCATION: ${{ secrets.LOCATION }}
+      TF_VAR_EMAIL: ${{ secrets.EMAIL }}
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
