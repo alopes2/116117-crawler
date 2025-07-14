@@ -80,11 +80,9 @@ export const handler: Handler<ScheduledEvent> = async (
     console.log('Finshed changing area');
     await page.click('.btn.kv-btn.btn-magenta.kv-btn-sm');
 
-    await page.waitForNavigation({
-      waitUntil: 'networkidle0',
-    });
     console.log('Finshed searching');
 
+    await page.waitForSelector('.ets-search-no-results, .ets-search-results');
     // const results = await page.$('.ets-search-no-results');
     const results = await page.$('.ets-search-results');
 
