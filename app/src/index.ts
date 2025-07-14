@@ -2,15 +2,16 @@ import type { Handler, ScheduledEvent } from 'aws-lambda';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import puppeteer, { type Browser } from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
-import Chromium from '@sparticuz/chromium';
 
-const isHeadless = process.env.IS_HEADLESS;
 const vermittlungscode = process.env.VERMITTLUNGS_CODE;
 const plz = process.env.PLZ;
 const location = process.env.LOCATION;
 const targetEmail = process.env.EMAIL || '';
 
 const client = new SESClient({});
+
+// Optional: If you'd like to disable webgl, true is the default.
+chromium.setGraphicsMode = false;
 
 export const handler: Handler<ScheduledEvent> = async (
   event: ScheduledEvent
@@ -26,16 +27,10 @@ export const handler: Handler<ScheduledEvent> = async (
       isMobile: false,
       width: 1920,
     };
-
-    browser = await puppeteer.launch({
-      // args: ,
-      args: puppeteer.defaultArgs({
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
-        // args: chromium.args,
-        headless: 'shell',
-      }),
-      executablePath: await chromium.executablePath(),
+    const browser = await puppeteer.launch({
+      args: puppeteer.defaultArgs({ args: chromium.args, headless: 'shell' }),
       defaultViewport: viewport,
+      executablePath: await chromium.executablePath(),
       headless: 'shell',
     });
 
