@@ -43,19 +43,24 @@ export const handler: Handler<ScheduledEvent> = async (
       `https://www.eterminservice.de/terminservice/suche/${vermittlungscode}/${plz}/${location}`
     );
 
-    console.log('Connected to website');
-
-    await page.waitForNavigation({
-      waitUntil: 'networkidle0',
-    });
-
-    await page.click(
-      'a.cookies-info-close.col-12.col-md-4.col-xl-3.me-md-3.btn.kv-btn.btn-magenta'
+    console.log(
+      'Connected to website ',
+      `https://www.eterminservice.de/terminservice/suche/${vermittlungscode}/${plz}/${location}`
     );
 
-    console.log('Clicked on cookies button');
+    // await page.waitForNavigation({
+    //   waitUntil: 'networkidle0',
+    // });
+
+    // await page.click(
+    //   'a.cookies-info-close.col-12.col-md-4.col-xl-3.me-md-3.btn.kv-btn.btn-magenta'
+    // );
+
+    // console.log('Clicked on cookies button');
 
     const distanceLabels = await page.$$('.ets-search-filter-distance-bubble');
+
+    console.log('got labels', distanceLabels);
 
     for (var label of distanceLabels) {
       const is20Label = await label.$eval('label', (element) => {
