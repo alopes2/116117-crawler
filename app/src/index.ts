@@ -17,10 +17,12 @@ export const handler: Handler<ScheduledEvent> = async (
   console.log('Starting appointment check');
   let browser: Browser | undefined;
   try {
+    const path = await chromium.executablePath();
+    console.log('Got path: ', path);
     browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath: path,
       headless: !!isHeadless,
-      args: chromium.args,
-      executablePath: await chromium.executablePath(),
     });
 
     const page = await browser.newPage();

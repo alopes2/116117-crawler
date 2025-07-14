@@ -23,6 +23,6 @@
   "dependencies": {
     "@aws-sdk/client-ses": "^3.844.0",
     "@sparticuz/chromium": "^138.0.1",
-    "puppeteer": "^24.12.1"
+    "puppeteer-core": "^24.12.1"
   }
 }
