@@ -1,0 +1,62 @@
+import type { Handler, ScheduledEvent } from 'aws-lambda';
+import puppeteer from 'puppeteer';
+
+const isHeadless = process.env.IS_HEADLESS;
+const vermittlungscode = process.env.VERMITTLUNGS_CODE;
+const plz = process.env.PLZ;
+const location = process.env.LOCATION;
+const targetEmail = process.env.EMAIL;
+
+export const handler: Handler<ScheduledEvent> = async (
+  event: ScheduledEvent
+): Promise<void> => {
+  console.log('Starting appointment check');
+  try {
+    const browser = await puppeteer.launch({
+      headless: !!isHeadless,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+
+    const page = await browser.newPage();
+
+    await page.goto(
+      `https://www.eterminservice.de/terminservice/suche/${vermittlungscode}/${plz}/${location}`
+    );
+
+    await page.waitForNavigation({
+      waitUntil: 'networkidle0',
+    });
+
+    await page.click(
+      'a.cookies-info-close.col-12.col-md-4.col-xl-3.me-md-3.btn.kv-btn.btn-magenta'
+    );
+
+    const distanceLabels = await page.$$('.ets-search-filter-distance-bubble');
+
+    for (var label of distanceLabels) {
+      const is20Label = await label.$eval('label', (element) => {
+        return element.textContent === '10';
+      });
+
+      if (is20Label) {
+        const span = await label.$('span');
+        await span?.evaluate((s) => s.click());
+      }
+    }
+
+    await page.click('.btn.kv-btn.btn-magenta.kv-btn-sm');
+
+    // const results = await page.$('.ets-search-no-results');
+    const results = await page.$('.ets-search-results');
+
+    console.log(results);
+
+    if (results) {
+      // Send email to targetEmail
+    }
+  } catch (error: any) {
+    console.error('Error finding appointment', error);
+  } finally {
+    console.log('Fininshed appointment check');
+  }
+};
