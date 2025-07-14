@@ -18,7 +18,7 @@ export const handler: Handler<ScheduledEvent> = async (
   let browser: Browser | undefined;
   try {
     const path = await chromium.executablePath(
-      '/node_modules/@sparticuz/chromium/bin'
+      'node_modules/@sparticuz/chromium/bin'
     );
     console.log('Got path: ', path);
     browser = await puppeteer.launch({
