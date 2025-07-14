@@ -20,7 +20,7 @@ resource "aws_scheduler_schedule" "scheduler" {
 
 resource "aws_iam_role" "scheduler" {
   name               = "scheduler_role"
-  assume_role_policy = data.aws_iam_policy_document.eventbridge_assume_policy.json
+  assume_role_policy = data.aws_iam_policy_document.scheduler_assume_policy.json
 }
 
 data "aws_iam_policy_document" "scheduler_assume_policy" {

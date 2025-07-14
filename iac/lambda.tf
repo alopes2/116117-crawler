@@ -31,11 +31,6 @@ resource "aws_iam_role" "iam_for_lambda" {
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
-resource "aws_iam_role_policy" "lambda_logs" {
-  role   = aws_iam_role.iam_for_lambda.name
-  policy = data.aws_iam_policy_document.lambda_policies.json
-}
-
 data "aws_iam_policy_document" "assume_role" {
 
   statement {
@@ -49,6 +44,25 @@ data "aws_iam_policy_document" "assume_role" {
     actions = ["sts:AssumeRole"]
   }
 }
+
+# resource "aws_iam_role_policy" "lambda_logs" {
+#   role   = aws_iam_role.iam_for_lambda.name
+#   policy = data.aws_iam_policy_document.lambda_policies.json
+# }
+
+# data "aws_iam_policy_document" "lambda_policies" {
+
+#   statement {
+#     effect = "Allow"
+
+#     principals {
+#       type        = "Service"
+#       identifiers = ["lambda.amazonaws.com"]
+#     }
+
+#     actions = ["sts:AssumeRole"]
+#   }
+# }
 
 resource "aws_lambda_permission" "eventbridge" {
   action        = "lambda:InvokeFunction"
