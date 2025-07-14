@@ -15,6 +15,7 @@ resource "aws_lambda_function" "lambda" {
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "index.handler"
   runtime       = "nodejs22.x"
+  memory_size   = 1024
   environment {
     variables = {
       IS_HEADLESS       = "true"
