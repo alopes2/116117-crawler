@@ -45,24 +45,25 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
-# resource "aws_iam_role_policy" "lambda_logs" {
-#   role   = aws_iam_role.iam_for_lambda.name
-#   policy = data.aws_iam_policy_document.lambda_policies.json
-# }
+resource "aws_iam_role_policy" "lambda_logs" {
+  role   = aws_iam_role.iam_for_lambda.name
+  policy = data.aws_iam_policy_document.lambda_policies.json
+}
 
-# data "aws_iam_policy_document" "lambda_policies" {
+data "aws_iam_policy_document" "lambda_policies" {
+  statement {
+    effect = "Allow"
 
-#   statement {
-#     effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+    ]
 
-#     principals {
-#       type        = "Service"
-#       identifiers = ["lambda.amazonaws.com"]
-#     }
+    resources = ["arn:aws:logs:*:*:*"]
+  }
+}
 
-#     actions = ["sts:AssumeRole"]
-#   }
-# }
 
 resource "aws_lambda_permission" "eventbridge" {
   action        = "lambda:InvokeFunction"
