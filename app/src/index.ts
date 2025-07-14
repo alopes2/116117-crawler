@@ -58,6 +58,8 @@ export const handler: Handler<ScheduledEvent> = async (
 
     // console.log('Clicked on cookies button');
 
+    await page.waitForSelector('.btn.kv-btn.btn-magenta.kv-btn-sm');
+
     const distanceLabels = await page.$$('.ets-search-filter-distance-bubble');
 
     console.log('got labels', distanceLabels);
