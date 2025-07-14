@@ -43,7 +43,7 @@ jobs:
         run: cd build && zip -r ../main.zip .
 
       - name: Upload to s3
-        run: aws s3 cp main s3://check-termin-code
+        run: aws s3 cp main.zip s3://check-termin-code
 
       - name: Update Lambda code
         run: aws lambda update-function-code --function-name=check-termin --s3-bucket=check-termin-code --s3-key=main.zip
