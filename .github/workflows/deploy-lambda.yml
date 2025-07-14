@@ -4,13 +4,13 @@ on:
     branches:
       - main
     paths:
-      - apps/get-data/**/*
+      - app/**/*
       - .github/workflows/deploy-lambda.yml
   workflow_dispatch:
 
 defaults:
   run:
-    working-directory: apps/get-data/
+    working-directory: app/
 
 jobs:
   terraform:
@@ -43,4 +43,4 @@ jobs:
         run: cd build && zip -r ../main.zip .
 
       - name: Update Lambda code
-        run: aws lambda update-function-code --function-name=get-data --zip-file=fileb://main.zip
+        run: aws lambda update-function-code --function-name=check-termin --zip-file=fileb://main.zip
