@@ -28,8 +28,12 @@ export const handler: Handler<ScheduledEvent> = async (
     };
 
     browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
-      // args: puppeteer.defaultArgs({ args: chromium.args, headless: 'shell' }),
+      // args: ,
+      args: puppeteer.defaultArgs({
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+        // args: chromium.args,
+        headless: 'shell',
+      }),
       executablePath: await chromium.executablePath(),
       defaultViewport: viewport,
       headless: 'shell',
