@@ -22,7 +22,7 @@ export const handler: Handler<ScheduledEvent> = async (
     );
     console.log('Got path: ', path);
     browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
       executablePath: path,
       headless: !!isHeadless,
     });
@@ -36,6 +36,10 @@ export const handler: Handler<ScheduledEvent> = async (
     await page.waitForNavigation({
       waitUntil: 'networkidle0',
     });
+
+    await page.waitForSelector(
+      'a.cookies-info-close.col-12.col-md-4.col-xl-3.me-md-3.btn.kv-btn.btn-magenta'
+    );
 
     await page.click(
       'a.cookies-info-close.col-12.col-md-4.col-xl-3.me-md-3.btn.kv-btn.btn-magenta'
@@ -55,6 +59,10 @@ export const handler: Handler<ScheduledEvent> = async (
     }
 
     await page.click('.btn.kv-btn.btn-magenta.kv-btn-sm');
+
+    await page.waitForNavigation({
+      waitUntil: 'networkidle0',
+    });
 
     // const results = await page.$('.ets-search-no-results');
     const results = await page.$('.ets-search-results');
