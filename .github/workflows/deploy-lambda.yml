@@ -44,8 +44,5 @@ jobs:
       - name: Zip build
         run: cd build && zip -r ../main.zip .
 
-      - name: Push to S#
-        run: aws s3 cp main.zip s3://check-termin-code
-
       - name: Update Lambda code
-        run: aws lambda update-function-code --function-name=check-termin --s3-bucket=check-termin-code --s3-key=main.zip
+        run: aws lambda update-function-code --function-name=check-termin --zip-file=fileb://main.zip
