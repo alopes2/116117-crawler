@@ -17,7 +17,9 @@ export const handler: Handler<ScheduledEvent> = async (
   console.log('Starting appointment check');
   let browser: Browser | undefined;
   try {
-    const path = await chromium.executablePath();
+    const path = await chromium.executablePath(
+      '/node_modules/@sparticuz/chromium/bin'
+    );
     console.log('Got path: ', path);
     browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
