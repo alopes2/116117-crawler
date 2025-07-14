@@ -16,6 +16,8 @@ jobs:
   terraform:
     name: 'Deploy Lambda'
     runs-on: ubuntu-latest
+    env:
+      PUPPETEER_CACHE_DIR: .cache
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
