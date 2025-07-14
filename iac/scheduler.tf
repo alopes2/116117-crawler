@@ -15,7 +15,7 @@ resource "aws_scheduler_schedule" "scheduler" {
 
   # schedule_expression = "cron(* * * * ? *)" // Triggers every minute, could also be rate(1 minute)
 
-  schedule_expression = "cron(0/15 6-18 30 7 2-6 2025)" // Triggers every 15 minutes, for every work week, in july 2025
+  schedule_expression = "cron(0/15 6-18 ? 7 MON-FRI 2025)" // Triggers every 15 minutes, for every work week, in july 2025
 }
 
 resource "aws_iam_role" "scheduler" {
