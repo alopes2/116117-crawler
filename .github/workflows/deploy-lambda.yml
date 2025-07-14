@@ -16,8 +16,6 @@ jobs:
   terraform:
     name: 'Deploy Lambda'
     runs-on: ubuntu-latest
-    env:
-      PUPPETEER_CACHE_DIR: .cache
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
@@ -44,5 +42,8 @@ jobs:
       - name: Zip build
         run: cd build && zip -r ../main.zip .
 
+      - name: Upload to s3
+        run: aws s3 cp main s3://check-termin-code
+
       - name: Update Lambda code
-        run: aws lambda update-function-code --function-name=check-termin --zip-file=fileb://main.zip
+        run: aws lambda update-function-code --function-name=check-termin --s3-bucket=check-termin-code --s3-key=main.zip
