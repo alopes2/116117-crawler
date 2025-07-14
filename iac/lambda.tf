@@ -62,6 +62,19 @@ data "aws_iam_policy_document" "lambda_policies" {
 
     resources = ["arn:aws:logs:*:*:*"]
   }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "ses:SendEmail",
+    ]
+
+    resources = [
+      aws_sesv2_email_identity.email_identity.arn,
+      aws_sesv2_configuration_set.configuration_set.arn,
+    ]
+  }
 }
 
 

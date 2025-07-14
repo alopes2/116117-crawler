@@ -1,11 +1,14 @@
 import type { Handler, ScheduledEvent } from 'aws-lambda';
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import puppeteer from 'puppeteer';
 
 const isHeadless = process.env.IS_HEADLESS;
 const vermittlungscode = process.env.VERMITTLUNGS_CODE;
 const plz = process.env.PLZ;
 const location = process.env.LOCATION;
-const targetEmail = process.env.EMAIL;
+const targetEmail = process.env.EMAIL || '';
+
+const client = new SESClient({});
 
 export const handler: Handler<ScheduledEvent> = async (
   event: ScheduledEvent
@@ -53,6 +56,7 @@ export const handler: Handler<ScheduledEvent> = async (
 
     if (results) {
       // Send email to targetEmail
+      await sendEmail();
     }
   } catch (error: any) {
     console.error('Error finding appointment', error);
@@ -60,3 +64,29 @@ export const handler: Handler<ScheduledEvent> = async (
     console.log('Fininshed appointment check');
   }
 };
+
+async function sendEmail() {
+  const subject = 'Termin available';
+  const body = `https://www.eterminservice.de/terminservice/suche/${vermittlungscode}/${plz}/${location}`;
+
+  const command = new SendEmailCommand({
+    Source: targetEmail,
+    Destination: {
+      ToAddresses: [targetEmail],
+    },
+    Message: {
+      Body: {
+        Text: {
+          Charset: 'UTF-8',
+          Data: body,
+        },
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: subject,
+      },
+    },
+  });
+
+  await client.send(command);
+}
