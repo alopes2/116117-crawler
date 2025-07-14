@@ -2,6 +2,7 @@ import type { Handler, ScheduledEvent } from 'aws-lambda';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import puppeteer, { type Browser } from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
+import Chromium from '@sparticuz/chromium';
 
 const isHeadless = process.env.IS_HEADLESS;
 const vermittlungscode = process.env.VERMITTLUNGS_CODE;
@@ -17,19 +18,26 @@ export const handler: Handler<ScheduledEvent> = async (
   console.log('Starting appointment check');
   let browser: Browser | undefined;
   try {
-    const path = await chromium.executablePath(
-      'node_modules/@sparticuz/chromium/bin'
-    );
-    console.log('Got path: ', path);
+    const viewport = {
+      deviceScaleFactor: 1,
+      hasTouch: false,
+      height: 1080,
+      isLandscape: true,
+      isMobile: false,
+      width: 1920,
+    };
+
     browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
-      executablePath: path,
-      headless: !!isHeadless,
+      // args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+      args: puppeteer.defaultArgs({ args: chromium.args, headless: 'shell' }),
+      executablePath: await chromium.executablePath(),
+      defaultViewport: viewport,
+      headless: 'shell',
     });
 
     const page = await browser.newPage();
 
-    await new Promise((r) => setTimeout(r, 1000));
+    // await new Promise((r) => setTimeout(r, 1000));
 
     await page.goto(
       `https://www.eterminservice.de/terminservice/suche/${vermittlungscode}/${plz}/${location}`
