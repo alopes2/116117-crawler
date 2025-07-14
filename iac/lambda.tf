@@ -16,6 +16,7 @@ resource "aws_lambda_function" "lambda" {
   handler       = "index.handler"
   runtime       = "nodejs22.x"
   memory_size   = 1024
+  timeout       = 30
   environment {
     variables = {
       IS_HEADLESS       = "true"
