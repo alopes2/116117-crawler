@@ -29,6 +29,8 @@ export const handler: Handler<ScheduledEvent> = async (
 
     const page = await browser.newPage();
 
+    await new Promise((r) => setTimeout(r, 1000));
+
     await page.goto(
       `https://www.eterminservice.de/terminservice/suche/${vermittlungscode}/${plz}/${location}`
     );
