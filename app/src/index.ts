@@ -37,23 +37,24 @@ export const handler: Handler<ScheduledEvent> = async (
 
     const page = await browser.newPage();
 
+    console.log('Browser initialized');
     // await new Promise((r) => setTimeout(r, 1000));
 
     await page.goto(
       `https://www.eterminservice.de/terminservice/suche/${vermittlungscode}/${plz}/${location}`
     );
 
+    console.log('Connected to website');
+
     await page.waitForNavigation({
       waitUntil: 'networkidle0',
     });
 
-    await page.waitForSelector(
-      'a.cookies-info-close.col-12.col-md-4.col-xl-3.me-md-3.btn.kv-btn.btn-magenta'
-    );
-
     await page.click(
       'a.cookies-info-close.col-12.col-md-4.col-xl-3.me-md-3.btn.kv-btn.btn-magenta'
     );
+
+    console.log('Clicked on cookies button');
 
     const distanceLabels = await page.$$('.ets-search-filter-distance-bubble');
 
@@ -65,14 +66,18 @@ export const handler: Handler<ScheduledEvent> = async (
       if (is20Label) {
         const span = await label.$('span');
         await span?.evaluate((s) => s.click());
+
+        console.log('Changed area');
       }
     }
 
+    console.log('Finshed changing area');
     await page.click('.btn.kv-btn.btn-magenta.kv-btn-sm');
 
     await page.waitForNavigation({
       waitUntil: 'networkidle0',
     });
+    console.log('Finshed searching');
 
     // const results = await page.$('.ets-search-no-results');
     const results = await page.$('.ets-search-results');
